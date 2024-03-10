@@ -7,14 +7,11 @@ let bodyParser = require('body-parser');
 let indexRouter = require('./routes/index');
 let usersRouter = require('./routes/users');
 let app = express();
-require("./routes/songs")(app);
-
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-
+require("./routes/songs")(app);
 
 
 // view engine setup
