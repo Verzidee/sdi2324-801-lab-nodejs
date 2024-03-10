@@ -4,19 +4,13 @@ let path = require('path');
 let cookieParser = require('cookie-parser');
 let logger = require('morgan');
 
+let app = express();
 let indexRouter = require('./routes/index');
 let usersRouter = require('./routes/users');
+require("./routes/songs")(app);
 
-let app = express();
 
-app.get("/songs", function (req, res) {
-  console.log("depurar aqui")
-  res.send("Lista de canciones")
-});
-app.get("/singers", function (req, res) {
-  console.log("depurar aqui")
-  res.send("Lista de cantantes")
-});
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
