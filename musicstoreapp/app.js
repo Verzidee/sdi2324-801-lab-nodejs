@@ -3,11 +3,16 @@ let express = require('express');
 let path = require('path');
 let cookieParser = require('cookie-parser');
 let logger = require('morgan');
-
-let app = express();
+let bodyParser = require('body-parser');
 let indexRouter = require('./routes/index');
 let usersRouter = require('./routes/users');
+let app = express();
 require("./routes/songs")(app);
+
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 
 
 
