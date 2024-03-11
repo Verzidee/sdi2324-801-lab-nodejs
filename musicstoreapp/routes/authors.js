@@ -1,18 +1,17 @@
 module.exports = function (app) {
+    let authors = [
+        { name: "Freddie Mercury", group: "Queen", role: "Vocalista" },
+        { name: "Jimmy Page", group: "Led Zeppelin", role: "Guitarrista" },
+        { name: "Paul McCartney", group: "The Beatles", role: "Bajista" },
+        { name: "Mick Jagger", group: "The Rolling Stones", role: "Vocalista" },
+        { name: "John Bonham", group: "Led Zeppelin", role: "Baterista" },
+        { name: "Kurt Cobain", group: "Nirvana", role: "Vocalista" },
+        { name: "Flea", group: "Red Hot Chili Peppers", role: "Bajista" },
+    ];
 
     app.get("/authors", function(req, res) {
-        // Array predefinido de autores con ejemplos reales
-        let authors = [
-            { name: "Freddie Mercury", group: "Queen", role: "Vocalista" },
-            { name: "Jimmy Page", group: "Led Zeppelin", role: "Guitarrista" },
-            { name: "Paul McCartney", group: "The Beatles", role: "Bajista" },
-            { name: "Mick Jagger", group: "The Rolling Stones", role: "Vocalista" },
-            { name: "John Bonham", group: "Led Zeppelin", role: "Baterista" },
-            { name: "Kurt Cobain", group: "Nirvana", role: "Vocalista y Guitarrista" },
-            { name: "Flea", group: "Red Hot Chili Peppers", role: "Bajista" },
-        ];
 
-        let response = {
+        const response = {
             Titulo:'Autores',
             authors: authors
         }
@@ -50,6 +49,17 @@ module.exports = function (app) {
             response += "Rol: no enviado en la petición" + "<br>";
         }
         res.send(response);
+    });
+
+    app.get("/authors/filter/:role", function(req, res) {
+        const role = req.params.role;
+        const filteredAuthors = authors.filter(author => author.role.toLowerCase().includes(role.toLowerCase()));
+
+        const response = {
+            Titulo: 'Autores Filtrados',
+            authors: filteredAuthors
+        };
+        res.render("authors/authors.twig", response);
     });
 
 
