@@ -38,23 +38,6 @@
 
 
 <div class="container">
-    <!-- Busqueda -->
-    <div class="row">
-        <div id="custom-search-input ">
-            <form method="get" action="/shop">
-                <div  class="input-group col-xs-8 col-sm-6 col-md-4 col-lg-5 pull-right">
-                    <input id="search" type="text" class="search-query form-control"
-                           placeholder="Nombre de la canción" name="search"/>
-                    <span class="input-group-btn">
-						<button class="btn" type="submit">
-							<span class="glyphicon glyphicon-search"></span>
-						</button>
-					</span>
-                </div>
-            </form>
-        </div>
-    </div>
-
 
     {% extends "layout.twig" %}
     {% block title %} Tienda – uoMusic {% endblock %}
@@ -75,7 +58,7 @@
                 </form>
             </div>
         </div>
-        <h2>Canciones</h2>
+        <h2>{{ seller }}</h2>
         <div class="row">
             <!-- Inicio del Bloque canción -->
             {% for song in songs %}

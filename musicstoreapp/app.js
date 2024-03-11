@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 require("./routes/songs")(app);
-
+require("./routes/authors")(app);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

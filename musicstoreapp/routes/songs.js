@@ -1,4 +1,4 @@
-module.exports = function(app,twig) {
+module.exports = function(app) {
     app.get("/songs", function(req, res) {
         let songs = [{
             "title":"Blank space",
@@ -17,13 +17,16 @@ module.exports = function(app,twig) {
         res.render("shop.twig",response);
     });
 
-    app.get('/add', function(req, res) {
-        let response = parseInt(req.query.num1) + parseInt(req.query.num2);
-        res.send(String(response));
+    app.post('/songs/add', function (req, res) {
+        let response = "Canción agregada: " + req.body.title + "<br>" +
+            "Género: " + req.body.kind + "<br>" +
+            "Precio: " + req.body.price;
+        res.send(response);
     });
     app.get('/songs/add', function (req, res) {
         res.render("add.twig");
     });
+
     app.get('/songs/:id', function(req, res) {
         let response = 'id: ' + req.params.id;
         res.send(response);
@@ -34,12 +37,7 @@ module.exports = function(app,twig) {
         res.send(response);
     });
 
-    app.post('/songs/add', function (req, res) {
-        let response = "Canción agregada: " + req.body.title + "<br>" +
-            "Género: " + req.body.kind + "<br>" +
-            "Precio: " + req.body.price;
-        res.send(response);
-    });
+
     app.get('/promo*', function (req, res) {
 
         res.send('Respuesta al patrón promo*');
