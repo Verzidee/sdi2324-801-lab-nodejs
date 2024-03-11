@@ -21,7 +21,14 @@ module.exports = function (app) {
 
 
     app.get("/authors/add", function (req, res) {
-        res.render("authors/add.twig");
+        const roles = [
+            "Cantante",
+            "Trompetista",
+            "Violinista",
+            "Saxofonista",
+            "Pianista"
+        ];
+        res.render("authors/add.twig", { roles: roles });
     });
 
 
