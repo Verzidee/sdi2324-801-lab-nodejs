@@ -7,12 +7,18 @@ let bodyParser = require('body-parser');
 let indexRouter = require('./routes/index');
 let usersRouter = require('./routes/users');
 let app = express();
+//app.set('connectionStrings', url);
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-require("./routes/songs")(app);
+const { MongoClient } = require("mongodb");
+const connectionStrings = "mongodb+srv://admub:9z6W6MpkeRBx5uIH@musicstoreapp.njk8cnz.mongodb.net/?retryWrites=true&w=majority&appName=musicstoreapp";
+const dbClient = new MongoClient(connectionStrings);
+
 require("./routes/authors")(app);
+require("./routes/songs.js")(app, dbClient);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
