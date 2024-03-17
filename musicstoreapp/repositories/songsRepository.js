@@ -7,11 +7,23 @@ module.exports = {
         this.dbClient = dbClient;
         this.app = app;
     },
-    findSong: async function (filter, options) {
+    updateSong: async function(newSong, filter, options) {
         try {
             await this.dbClient.connect();
             const database = this.dbClient.db(this.database);
             const songsCollection = database.collection(this.collectionName);
+            const result = await songsCollection.updateOne(filter, {$set: newSong}, options);
+            return result;
+        } catch (error) {
+            throw (error);
+        }
+    },
+    findSong: async function (filter, options) {
+        try {
+            const client = await this.dbClient.connect(this.app.get('connectionStrings'));
+            const database = client.db("musicStore");
+            const collectionName = 'songs';
+            const songsCollection = database.collection(collectionName);
             const song = await songsCollection.findOne(filter, options);
             return song;
         } catch (error) {
