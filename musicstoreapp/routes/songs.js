@@ -97,15 +97,6 @@ module.exports = function(app,songsRepository) {
         //que no se cree un documento nuevo, si no existe
         const options = {upsert: false}
         songsRepository.updateSong(song, filter, options).then(result => {
-            res.send("Se ha modificado "+ result.modifiedCount + " registro");
-        });
-    })
-    app.get('/songs/:id', function (req, res) {
-        let filter = {_id: new ObjectId(req.params.id)};
-        let options = {};
-        songsRepository.findSong(filter, options).then(song => {
-            res.render("songs/song.twig", {song: song});
-        }).catch(error => {
             step1UpdateCover(req.files, songId, function (result) {
                 if (result == null) {
                     res.send("Error al actualizar la portada o el audio de la canción");
@@ -145,6 +136,15 @@ module.exports = function(app,songsRepository) {
             callback(true); // FIN
         }
     }
+    app.get('/songs/:id', function (req, res) {
+        let filter = {_id: new ObjectId(req.params.id)};
+        let options = {};
+        songsRepository.findSong(filter, options).then(song => {
+            res.render("songs/song.twig", {song: song});
+        }).catch(error => {
+            res.send("Se ha producido un error al buscar la canción " + error)
+        });
+    })
 
     app.get('/songs/:kind/:id', function(req, res) {
         let response = 'id: ' + req.params.id + '<br>'
