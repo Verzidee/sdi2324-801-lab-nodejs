@@ -7,6 +7,12 @@ let bodyParser = require('body-parser');
 let indexRouter = require('./routes/index');
 let usersRouter = require('./routes/users');
 let app = express();
+let fileUpload = require('express-fileupload');
+app.use(fileUpload({
+  limits: { fileSize: 50 * 1024 * 1024 },
+  createParentPath: true
+}));
+app.set('uploadPath', __dirname)
 
 const { MongoClient } = require("mongodb");
 const connectionStrings = "mongodb+srv://admub:9z6W6MpkeRBx5uIH@musicstoreapp.njk8cnz.mongodb.net/?retryWrites=true&w=majority&appName=musicstoreapp";
