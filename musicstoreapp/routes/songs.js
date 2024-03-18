@@ -140,7 +140,11 @@ module.exports = function(app,songsRepository) {
         let filter = {_id: new ObjectId(req.params.id)};
         let options = {};
         songsRepository.findSong(filter, options).then(song => {
+
+
             res.render("songs/song.twig", {song: song});
+
+
         }).catch(error => {
             res.send("Se ha producido un error al buscar la canción " + error)
         });

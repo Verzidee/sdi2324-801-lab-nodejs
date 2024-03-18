@@ -19,7 +19,8 @@ const userAudiosRouter = require('./routes/userAudiosRouter');
 app.use("/songs/add",userSessionRouter);
 app.use("/publications",userSessionRouter);
 app.use("/audios/",userAudiosRouter);
-app.use("/shop/",userSessionRouter)
+app.use("/shop/",userSessionRouter);
+app.use("/songs/favorites",userSessionRouter);
 
 let crypto = require('crypto');
 let fileUpload = require('express-fileupload');
@@ -39,6 +40,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const { MongoClient } = require("mongodb");
 const connectionStrings = "mongodb+srv://admub:9z6W6MpkeRBx5uIH@musicstoreapp.njk8cnz.mongodb.net/?retryWrites=true&w=majority&appName=musicstoreapp";
 const dbClient = new MongoClient(connectionStrings);
+let favoriteSongsRepository = require("./repositories/favoriteSongsRepository");
+favoriteSongsRepository.init(app,dbClient);
 let songsRepository = require("./repositories/songsRepository.js");
 songsRepository.init(app, dbClient);
 const usersRepository = require("./repositories/usersRepository.js");
@@ -48,7 +51,7 @@ require("./routes/users.js")(app, usersRepository);
 
 
 var indexRouter = require('./routes/index');
-
+require("./routes/songs/favorites.js")(app,favoriteSongsRepository);
 require("./routes/songs.js")(app, songsRepository);
 require("./routes/authors.js")(app);
 
@@ -80,6 +83,7 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+  console.log("Error"+err);
 });
 
 module.exports = app;

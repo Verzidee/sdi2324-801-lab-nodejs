@@ -71,6 +71,11 @@
                             <div class="small">{{ song.author }} </div>
                             <div class="text-right">{{ song.price }} €</div>
                         </a>
+                        <form method="POST" action="/songs/favorites/add/{{ song._id }}">
+                            <input type="hidden" name="title" value="{{ song.title }}">
+                            <input type="hidden" name="price" value="{{ song.price }}">
+                            <input type="submit" value ="Añadir a Favoritos"/>
+                        </form>
                     </div>
                 </div>
             {% endfor %}
