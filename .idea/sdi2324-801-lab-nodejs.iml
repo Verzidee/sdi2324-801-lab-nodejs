@@ -8,4 +8,7 @@
     <orderEntry type="library" name="jquery" level="application" />
     <orderEntry type="library" name="bootstrap" level="application" />
   </component>
+  <component name="SonarLintModuleSettings">
+    <option name="uniqueId" value="bbb7b809-a0f5-44db-ba7a-f73ec49f6192" />
+  </component>
 </module>
