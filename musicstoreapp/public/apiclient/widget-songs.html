@@ -1,12 +1,13 @@
 <div id="widget-songs" >
+    <input type="text" class="form-control" placeholder="Filtrar por nombre" id="filter-by-name"/>
     <button class="btn btn-primary" onclick="widgetAddSong()">Nueva Canción</button>
     <button class="btn" onclick="loadSongs()" >Actualizar</button>
     <table class="table table-hover">
         <thead>
         <tr>
-            <th>Título</th>
+            <th><a onclick="sortByTitle()">Título</a></th>
             <th>Género</th>
-            <th>Precio</th>
+            <th><a onclick="sortByPrice()">Precio</a></th>
             <th class="col-md-1"></th>
         </tr>
         </thead>
@@ -14,8 +15,10 @@
     </table>
 </div>
 <script>
+    window.history.pushState("", "", "/apiclient/client.html?w=songs");
     var songs;
     var selectedSongId;
+    var priceDesc = true;
     function loadSongs() {
         $.ajax({
             url: URLbase + "/songs",
@@ -32,6 +35,7 @@
             }
         });
     }
+
     function updateSongsTable(songs) {
         $("#songsTableBody").empty(); // Vaciar la tabla
         for (let i = 0; i < songs.length; i++) {
@@ -72,10 +76,35 @@
     function widgetAddSong() {
         $( "#main-container" ).load( "widget-add.html");
     }
+    $('#filter-by-name').on('input',function(e){
+        let filteredSongs = [];
+        let filterValue = $("#filter-by-name").val();
+        filteredSongs = songs.filter(song => song.title.toLowerCase().includes(filterValue.toLowerCase()));
+        updateSongsTable(filteredSongs);
+    });
+    function sortByTitle() {
+        songs.sort(function (a, b) {
+            if (a.title > b.title) return 1;
+            if (a.title < b.title) return -1;
+            return 0;
+        });
+        updateSongsTable(songs);
+    }
+    function sortByPrice() {
+        if (priceDesc) {
+            songs.sort(function (a, b) {
+                return parseFloat(a.price) - parseFloat(b.price);
+            });
+        } else {
+            songs.sort(function (a, b) {
+                return parseFloat(b.price) - parseFloat(a.price);
+            });
+        }
+        updateSongsTable(songs);
+        priceDesc = !priceDesc //invertir ordenación
+    }
+
 
     loadSongs();
-    setInterval(function() {
-        loadSongs();
-    }, 5000);
 
 </script>
