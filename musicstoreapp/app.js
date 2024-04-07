@@ -13,7 +13,8 @@ app.use(function(req, res, next) {
   // Debemos especificar todas las headers que se aceptan. Content-Type , token
   next();
 });
-
+let rest = require('request');
+app.set('rest', rest);
 let jwt = require('jsonwebtoken');
 app.set('jwt',jwt);
 
