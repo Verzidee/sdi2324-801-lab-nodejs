@@ -5,6 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 let app = express();
+let jwt = require('jsonwebtoken');
+app.set('jwt',jwt);
 
 let expressSession = require('express-session');
 app.use(expressSession({
@@ -12,6 +14,10 @@ app.use(expressSession({
   resave: true,
   saveUninitialized: true
 }));
+let bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 
 const userSessionRouter = require('./routes/userSessionRouter');
 const userAudiosRouter = require('./routes/userAudiosRouter');
@@ -27,6 +33,9 @@ app.use("/songs/favorites",userSessionRouter);
 app.use("/songs/edit",userAuthorRouter);
 app.use("/songs/delete",userAuthorRouter);
 
+const userTokenRouter = require('./routes/userTokenRouter');
+app.use("/api/v1.0/songs/", userTokenRouter);
+
 
 let crypto = require('crypto');
 let fileUpload = require('express-fileupload');
@@ -39,9 +48,7 @@ app.set('clave','abcdefg');
 app.set('crypto',crypto);
 
 
-let bodyParser = require('body-parser');
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+
 
 const { MongoClient } = require("mongodb");
 const connectionStrings = "mongodb+srv://admub:9z6W6MpkeRBx5uIH@musicstoreapp.njk8cnz.mongodb.net/?retryWrites=true&w=majority&appName=musicstoreapp";
@@ -60,7 +67,7 @@ var indexRouter = require('./routes/index');
 require("./routes/songs/favorites.js")(app,favoriteSongsRepository);
 require("./routes/songs.js")(app, songsRepository);
 require("./routes/authors.js")(app);
-require("./routes/api/songsAPIv1.0.js")(app, songsRepository);
+require("./routes/api/songsAPIv1.0.js")(app, songsRepository,usersRepository);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
