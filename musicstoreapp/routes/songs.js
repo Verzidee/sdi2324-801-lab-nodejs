@@ -229,16 +229,38 @@ module.exports = function(app,songsRepository) {
     app.get('/songs/:id', async function (req, res) {
         let songId = req.params.id;
         const checkResult = await checkUserPermissionsForSong(req, songId);
-
+        const songValue = checkResult.song.price / await getUSDExchangeRate();
+        const songusd = Math.round(songValue * 100) / 100;
         if (checkResult.error) {
             res.send(checkResult.error);
         } else {
             res.render("songs/song.twig", {
                 song: checkResult.song,
-                isPurchasedOrAuthor: checkResult.hasPurchased || checkResult.isAuthor
+                isPurchasedOrAuthor: checkResult.hasPurchased || checkResult.isAuthor,
+                songusd: songusd
             });
         }
     });
+    async function getUSDExchangeRate() {
+        const settings = {
+            url: "http://api.currencylayer.com/live?access_key=491bd9a92db9bf08475cb3829af31bcc&currencies=EUR,USD",
+            method: "get"
+        };
+        let rest = app.get("rest");
+
+        return new Promise((resolve, reject) => {
+            rest(settings, function (error, response, body) {
+                if (error) {
+                    reject(error);
+                } else {
+                    const responseObject = JSON.parse(body);
+                    const rateUSD = responseObject.quotes.USDEUR;
+                    resolve(rateUSD);
+                }
+            });
+        });
+    }
+
     async function checkUserPermissionsForSong(req, songId) {
         // Convertir songId a ObjectId si es necesario
         songId = (songId instanceof ObjectId) ? songId : new ObjectId(songId);
