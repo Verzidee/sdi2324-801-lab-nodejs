@@ -60,7 +60,7 @@ var indexRouter = require('./routes/index');
 require("./routes/songs/favorites.js")(app,favoriteSongsRepository);
 require("./routes/songs.js")(app, songsRepository);
 require("./routes/authors.js")(app);
-
+require("./routes/api/songsAPIv1.0.js")(app, songsRepository);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
