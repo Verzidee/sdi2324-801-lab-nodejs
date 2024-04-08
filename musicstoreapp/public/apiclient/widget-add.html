@@ -22,11 +22,13 @@
     </div>
     <div class="col-sm-offset-2 col-sm-10">
         <button type="button" class="btn btn-primary" id="boton-add"
-                onclick="widgetAddSong()">Nueva canción</button>
+                onclick="widgetAddSong()">Nueva canción
+        </button>
     </div>
 </div>
+
 <script>
-    function widgetAddSong( ) {
+    function widgetAddSong() {
         $.ajax({
             url: URLbase + "/songs",
             type: "POST",
@@ -41,8 +43,19 @@
                 console.log(response); // <-- Prueba
                 $("#main-container").load("widget-songs.html");
             },
-            error: function (error) {
-                $("#main-container").load("widget-login.html");
+            error: function (response) {
+                console.log(response.responseJSON.errors);
+                $("#div-errors").remove();
+                let current_errors = (typeof response.responseJSON.errors === "undefined") ? null : response.responseJSON.errors;
+                if (current_errors != null && current_errors.length > 0) {
+                    $("#widget-agregar").prepend("<div id = 'div-errors' class='alert alert-danger'><ul id = 'ul-errors'></ul></div>");
+                    for (let i = 0; i < current_errors.length; i++) {
+                        $("#ul-errors").append("<li>" + current_errors[i].msg + "</li>");
+                    }
+                } else {
+                    $("#widget-agregar")
+                        .prepend("<div id = 'div-errors' class='alert alert-danger'>Se ha producido un error inesperado</div>");
+                }
             }
         });
     }
