@@ -46,15 +46,13 @@
                 "<td>" + songs[i].price + "</td>" +
                 "<td>" +
                 "<a onclick=songDetail('" + songs[i]._id + "')>Detalles</a><br>" +
-                "<a onclick=songDelete('" + songs[i]._id + "')>Eliminar</a><br>" +
-                "<a onclick=songEdit('" + songs[i]._id + "')>Editar</a>" +
+                "<a onclick=songDelete('" + songs[i]._id + "')>Eliminar</a>" +
                 "</td>" +
                 "</tr>");
             // Mucho cuidado con las comillas del eliminarCancion
             //la id tiene que ir entre comillas ' '
         }
     }
-
     function songDelete(_id) {
         $.ajax({
             url: URLbase + "/songs/" + _id,
@@ -63,33 +61,17 @@
             dataType: 'json',
             headers: {"token": token},
             success: function (response) {
-                $("#div-errors").remove();
                 console.log("Canción eliminada: " + _id);
-                $("#" + _id).remove();
+                $("#" + _id).remove(); // eliminar el <tr> de la canción
             },
-            error: function (response) {
-                $("#songsTableBody").empty();
-                console.log(response);
-                $("#div-errors").remove();
-                let current_errors = (typeof response.responseJSON.errors === "undefined") ? null : response.responseJSON.errors;
-                if (current_errors != null && current_errors.length > 0) {
-                    $("#widget-songs").prepend("<div id = 'div-errors' class='alert alert-danger'><ul id = 'ul-errors'></ul></div>");
-                    $("#ul-errors").append("<li>" + current_errors + "</li>");
-                } else {
-                    $("#widget-songs")
-                        .prepend("<div id = 'div-errors' class='alert alert-danger'>Se ha producido un error inesperado</div>");
-                }
-                loadSongs();
+            error: function (error) {
+                $("#main-container").load("widget-login.html");
             }
         });
     }
     function songDetail(_id) {
         selectedSongId = _id;
         $("#main-container").load("widget-detail.html");
-    }
-    function songEdit(_id) {
-        selectedSongId = _id;
-        $("#main-container").load("widget-edit.html");
     }
     function widgetAddSong() {
         $( "#main-container" ).load( "widget-add.html");
